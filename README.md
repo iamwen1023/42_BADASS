@@ -16,3 +16,18 @@ isisd=yes
 in my host
 docker cp frr-test:/etc/frr/daemons ./
 
+
+Configure IP addresses
+
+In MinimalNode:
+ip addr add 192.168.1.2/24 dev eth0
+ip link set eth0 up
+
+In RouterNode:
+ip addr add 192.168.1.1/24 dev eth0
+ip link set eth0 up
+
+Test and check ps
+Ping from MinimalNode:
+ping 192.168.1.1
+
