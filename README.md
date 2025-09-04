@@ -40,3 +40,6 @@ Test and check ps
 Ping from MinimalNode:
 ping 192.168.1.1
 
+
+p2
+

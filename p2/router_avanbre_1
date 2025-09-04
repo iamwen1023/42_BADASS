@@ -1,0 +1,44 @@
+# Clean up (ignore errors)
+# delete vxlan10 if it exists; suppress errors.
+/sbin/ip link del vxlan10 2>/dev/null || true
+# bring br0 down if it exists.
+/sbin/ip link set br0 down 2>/dev/null || true
+# delete bridge br0; suppress errors.
+/usr/sbin/brctl delbr br0 2>/dev/null || true
+
+# Underlay (eth0)
+# set underlay IP on eth0
+/sbin/ip addr add 10.1.1.1/24 dev eth0 
+# bring eth0 up.
+/sbin/ip link set eth0 up
+# ensure direct route to underlay subnet.
+/sbin/ip route replace 10.1.1.0/24 dev eth0
+
+# VXLAN
+# create VXLAN device with id 10, unicast to peer 10.1.1.2.
+/sbin/ip link add vxlan10 type vxlan id 10 dev eth0 remote 10.1.1.2 local 10.1.1.1 dstport 4789
+
+# Bridge create bridge and add eth1 and vxlan10 in bridge
+/usr/sbin/brctl addbr br0
+/usr/sbin/brctl addif br0 eth1
+/usr/sbin/brctl addif br0 vxlan10
+
+# No IPs on slaves; IP on bridge
+# remove any IPs from eth1
+/sbin/ip addr flush dev eth1
+/sbin/ip addr flush dev vxlan10
+/sbin/ip addr add 20.1.1.1/24 dev br0
+
+# Bring up and align MTU
+/sbin/ip link set eth1 up
+/sbin/ip link set vxlan10 up
+/sbin/ip link set br0 up
+/sbin/ip link set dev br0 mtu 1450
+/sbin/ip link set dev eth1 mtu 1450
+
+# Verify
+/sbin/ip -d link show dev vxlan10
+/sbin/ip addr show dev br0
+/sbin/bridge link | grep 'master br0'
+ping -c3 10.1.1.2
+ping -c3 20.1.1.2
