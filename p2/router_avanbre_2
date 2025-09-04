@@ -1,23 +1,7 @@
-ip link add br0 type bridge
-ip link set dev br0 up
-
-ip addr add 10.1.1.2/24 dev eth0
-# ip link set eth0 up
-
-ip link show eth0
-
-ip link add vxlan10 type vxlan id 10 dev eth0 remote 10.1.1.1 local 10.1.1.2 dstport 4789
-ip addr add 20.1.1.1/24 dev vxlan10
-
- brctl addif br0 eth1
-brctl addif br0 vxlan10
-
-
-
 # Clean up (ignore errors)
 /sbin/ip link del vxlan10 2>/dev/null || true
 /sbin/ip link set br0 down 2>/dev/null || true
-/sbin/brctl delbr br0 2>/dev/null || true
+/usr/sbin/brctl delbr br0 2>/dev/null || true
 
 # Underlay (eth0)
 /sbin/ip addr add 10.1.1.2/24 dev eth0 2>/dev/null || true
@@ -41,12 +25,11 @@ brctl addif br0 vxlan10
 /sbin/ip link set eth1 up
 /sbin/ip link set vxlan10 up
 /sbin/ip link set br0 up
-/sbin/ip link set dev br0 mtu 1450
-/sbin/ip link set dev eth1 mtu 1450
+#/sbin/ip link set dev br0 mtu 1450
+#/sbin/ip link set dev eth1 mtu 1450
 
 # Verify
 /sbin/ip -d link show dev vxlan10
 /sbin/ip addr show dev br0
 /sbin/bridge link | grep 'master br0'
-ping -c3 10.1.1.1
-ping -c3 20.1.1.1
+ping 10.1.1.1

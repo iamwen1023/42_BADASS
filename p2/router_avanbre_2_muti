@@ -1,0 +1,10 @@
+/sbin/ip link del vxlan10 2>/dev/null || true
+/sbin/ip link add br0 type bridge
+/sbin/ip link add vxlan10 type vxlan id 10 dev eth0 group 239.0.0.10 local 10.1.1.2 dstport 4789
+/sbin/ip link set dev eth1 master br0
+/sbin/ip link set dev vxlan10 master br0
+/sbin/ip addr add 10.1.1.2/24 dev eth0
+/sbin/ip addr flush dev eth1
+/sbin/ip addr flush dev vxlan10
+/sbin/ip addr add 20.1.1.2/24 dev br0
+/sbin/ip link set eth0 up; /sbin/ip link set eth1 up; /sbin/ip link set vxlan10 up; /sbin/ip link set br0 up

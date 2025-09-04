@@ -24,7 +24,7 @@
 /usr/sbin/brctl addif br0 vxlan10
 
 # No IPs on slaves; IP on bridge
-# remove any IPs from eth1
+# remove any IPs from eth1 and vxlan10
 /sbin/ip addr flush dev eth1
 /sbin/ip addr flush dev vxlan10
 /sbin/ip addr add 20.1.1.1/24 dev br0
@@ -33,12 +33,11 @@
 /sbin/ip link set eth1 up
 /sbin/ip link set vxlan10 up
 /sbin/ip link set br0 up
-/sbin/ip link set dev br0 mtu 1450
-/sbin/ip link set dev eth1 mtu 1450
+#/sbin/ip link set dev br0 mtu 1450
+#/sbin/ip link set dev eth1 mtu 1450
 
 # Verify
 /sbin/ip -d link show dev vxlan10
 /sbin/ip addr show dev br0
 /sbin/bridge link | grep 'master br0'
-ping -c3 10.1.1.2
-ping -c3 20.1.1.2
+ping 10.1.1.2
