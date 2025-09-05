@@ -41,7 +41,6 @@ router bgp 1
  address-family l2vpn evpn
   neighbor ibgp activate
   neighbor ibgp route-reflector-client
-  neighbor ibgp next-hop-unchanged
  exit-address-family
 !
 

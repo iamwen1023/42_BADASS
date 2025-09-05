@@ -109,3 +109,10 @@ Data plane:
 Put hosts behind each leaf on the same subnet (e.g., 20.1.1.10/24, 20.1.1.20/24, 20.1.1.30/24).
 Ping across hosts; on leaves, tcpdump -ni eth0 udp port 4789 shows encapsulated traffic.
 In short: OSPF builds reachability for loopbacks; iBGP EVPN (with a spine RR) distributes MAC/IP for VNI 10; FRR programs the Linux bridge/VXLAN so your leaves bridge L2 across the IP underlay without static VXLAN peers.
+
+
+
+
+
+vtysh -c "show bgp l2vpn evpn"
+vtysh -c "show ip ospf neighbor"

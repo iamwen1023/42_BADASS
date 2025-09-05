@@ -5,5 +5,4 @@ RUN apk update && apk add iproute2 && apk add bridge-utils
 
 # Copy your FRR daemons config
 COPY ./daemons.conf /etc/frr/daemons
-
-ENV PATH="/usr/sbin:/sbin:${PATH}"
+RUN chown frr:frr /etc/frr/daemons && chmod 640 /etc/frr/daemons
