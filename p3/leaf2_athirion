@@ -2,11 +2,6 @@
 ! This router acts as VTEP and connects to Host2
 ! NOTE: Create L2 bridge/vxlan in Linux (br10 + vxlan10). This file keeps FRR routing only.
 
-! Enable required daemons
-zebra=yes
-bgpd=yes
-ospfd=yes
-
 ! Zebra configuration
 interface eth0
  ip address 10.1.2.2/30

@@ -1,11 +1,6 @@
 ! Spine/RR Configuration for EVPN VXLAN
 ! This router acts as Route Reflector for EVPN and provides underlay connectivity
 
-! Enable required daemons
-zebra=yes
-bgpd=yes
-ospfd=yes
-
 ! Zebra configuration
 interface eth0
  ip address 10.1.1.1/30
