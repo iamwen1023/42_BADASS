@@ -1,41 +1,34 @@
-# 42_BADASS
-p1
+## P1
 
-run frrouting image 
+In P1, we introduce two Docker images:
+
+* A lightweight FRRouting image, with the necessary routing daemons.
+* A simple host based on an Alpine image. 
+
+The goal of this exercise is to make them communicate with each other.
+
+### Steps
+
+In your host terminal:
 ```
-docker run -it --name frr-test frrouting/frr:latest /bin/sh
+# create the Docker images
+docker build -t router_wlo -f router_wlo .
+docker build -t host_wlo -f host_wlo .
 ```
-modify config for 
+In the auxiliary console of the router image:
 ```
-vi /etc/frr/daemons
+# set the IP address:
+ip addr add 192.168.1.1/24 dev eth0
+
+# turn on the device
+ip link set eth0 up
 ```
-bgpd=yes
-ospfd=yes
-isisd=yes
 
-in my host
-docker cp frr-test:/etc/frr/daemons ./
-
-docker build -t router_wlo -f router_wlo ." -t and -f 
-
-Configure IP addresses
-
-In MinimalNode:
+In the auxiliary console of the host image:
+```
+# set the IP address:
 ip addr add 192.168.1.2/24 dev eth0
-ip link set eth0 up
 
-In RouterNode:
-ip addr add 192.168.1.1/24 dev eth0
-ip link set eth0 up
-
-
-Right-click the node → Configure → Advanced → Startup script
-
-Add your commands:
-ip addr add 192.168.1.1/24 dev eth0
-ip link set eth0 up
-
-
-Test and check ps
-Ping from MinimalNode:
+# test if the images are connected:
 ping 192.168.1.1
+```
