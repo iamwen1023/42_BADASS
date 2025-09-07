@@ -1,6 +1,5 @@
 ! Leaf3 Configuration for EVPN VXLAN
 ! This router acts as VTEP and connects to Host3
-! NOTE: Create L2 bridge/vxlan in Linux (br10 + vxlan10). This file keeps FRR routing only.
 
 ! Zebra configuration
 interface eth0

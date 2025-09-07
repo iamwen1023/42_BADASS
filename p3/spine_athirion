@@ -24,7 +24,7 @@ router ospf
  network 1.1.1.1/32 area 0
 !
 
-! BGP configuration
+! BGP configuration for EVPN Route Reflector
 router bgp 1
  bgp router-id 1.1.1.1
  no bgp ebgp-requires-policy
@@ -32,9 +32,26 @@ router bgp 1
  neighbor ibgp remote-as 1
  neighbor ibgp update-source lo
  bgp listen range 1.1.1.0/29 peer-group ibgp
- !  can list 1.1.1.1 - 1.1.1.6 as peer-group ibgp
+  !  can list 1.1.1.1 - 1.1.1.6 as peer-group ibgp
  address-family l2vpn evpn
   neighbor ibgp activate
   neighbor ibgp route-reflector-client
  exit-address-family
 !
+
+# Verification commands for Spine (Route Reflector)
+# Check BGP neighbor status
+vtysh -c "show bgp summary"
+vtysh -c "show bgp l2vpn evpn summary"
+
+# Check EVPN routes received from all leafs
+vtysh -c "show bgp l2vpn evpn route"
+
+# Check BGP peer group status
+vtysh -c "show bgp peer-group"
+
+# Check OSPF neighbor status
+vtysh -c "show ip ospf neighbor"
+
+# Check routing table
+vtysh -c "show ip route"

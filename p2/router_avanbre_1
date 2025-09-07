@@ -39,4 +39,5 @@
 /sbin/ip -d link show dev vxlan10
 /sbin/ip addr show dev br0
 /sbin/bridge link | grep 'master br0'
+/usr/sbin/brctl showmacs br0
 ping 10.1.1.2

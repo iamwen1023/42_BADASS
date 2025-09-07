@@ -1,6 +1,5 @@
 ! Leaf1 Configuration for EVPN VXLAN
 ! This router acts as VTEP and connects to Host1
-! NOTE: Create L2 bridge/vxlan in Linux (br10 + vxlan10). This file keeps FRR routing only.
 
 ! Zebra configuration
 interface eth0
@@ -18,7 +17,7 @@ router ospf
  network 1.1.1.2/32 area 0
 !
 
-! BGP configuration
+! BGP configuration for EVPN VXLAN
 router bgp 1
  bgp router-id 1.1.1.2
  no bgp ebgp-requires-policy
@@ -46,6 +45,10 @@ router bgp 1
 /sbin/ip link set br10 up
 /sbin/ip link set eth1 up
 
+# Create VXLAN interface with EVPN Type 3 support
+# nolearning: Disable MAC learning on VXLAN interface
+# This forces all MAC learning to go through BGP EVPN Type 2 routes
+# BUM traffic (Broadcast, Unknown unicast, Multicast) uses BGP EVPN Type 3 routes
 /sbin/ip link add vxlan10 type vxlan id 10 dev eth0 local 1.1.1.2 dstport 4789 nolearning
 /sbin/ip link set vxlan10 up
 /usr/sbin/brctl addif br10 vxlan10
