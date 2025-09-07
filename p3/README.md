@@ -164,6 +164,20 @@ The three routers in the middle are the leaves, and the top router is the spine.
 
 Now open the auxiliary console of each image separately. For the host machines, you can execute the commands in the file with corresponding name one by one. For the leaves and spine you need to add the configurations manually as described below.
 
+**Important Configuration Order**:
+
+**For Leaf Routers (VTEPs)**:
+1. **First**: Configure Linux Bridge and VXLAN interfaces
+2. **Second**: Configure FRRouting (Zebra, OSPF, BGP)
+
+**For Spine Router (Route Reflector)**:
+- **Only**: Configure FRRouting (Zebra, OSPF, BGP)
+- **No bridge/VXLAN needed**: Spine only reflects routes, doesn't connect to hosts
+
+**Why this difference?**:
+- **Leaf routers**: Act as VTEPs, need VXLAN tunnels and bridges to connect hosts
+- **Spine router**: Acts as Route Reflector, only needs BGP to exchange routing information
+
 In the auxiliary console:
 ```
 # start vtysh shell in config mode
